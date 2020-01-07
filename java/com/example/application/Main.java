@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class Main extends AppCompatActivity {
@@ -20,6 +21,7 @@ public class Main extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        new SQLiteHelper(_this);
                         startActivity(new Intent(_this, Login.class));
                     }
                 });
@@ -43,11 +45,45 @@ public class Main extends AppCompatActivity {
 
         public SQLiteHelper(Context context){
             super(context, DBNAME, null, 1);
+            this.getWritableDatabase();
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-
+            String sql = String.format(
+                    " CREATE TABLE IF NOT EXISTS %s " +
+                    " ( %s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "   %s TEXT, " +
+                    "   %s TEXT, " +
+                    "   %s TEXT, " +
+                    "   %s TEXT, " +
+                    "   %s TEXT, " +
+                    "   %s TEXT " +
+                    ")",MEMBERS, SEQ,NAME, PASSWD, EMAIL,
+                    PHONE, ADDR, PHOTO );
+            Log.d("실행할 쿼리 : ", sql);
+            db.execSQL(sql);
+            String[] names = {"강동원","윤아","임수정","박보검","송중기"};
+            String[] emails = {"kdw", "yoona","lsj","pbk","sjk"};
+            for(int i = 0; i< names.length;i++){
+                db.execSQL(String.format(" INSERT INTO %s " +
+                        "( %s, " +
+                        " %s ," +
+                        " %s ," +
+                        " %s ," +
+                        " %s ," +
+                        " %s )" +
+                        " VALUES (" +
+                        " '%s' ," +
+                        " '%s' ," +
+                        " '%s' ," +
+                        " '%s' ," +
+                        " '%s' ," +
+                        " '%s' )" , MEMBERS, NAME, PASSWD, EMAIL,
+                        PHONE, ADDR, PHOTO, names[i], "1", emails[i]+"@test.com",
+                        "010-1234-567"+(i+1), "백범로 "+(i+1)+"길", "photo_"+(i+1)));
+            }
+            Log.d("INSERT 쿼리 ", " SUCCESS !! ");
         }
 
         @Override

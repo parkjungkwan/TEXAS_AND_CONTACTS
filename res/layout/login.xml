@@ -20,7 +20,7 @@
         android:background="@drawable/border_gray"
         android:hint="아이디"/>
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/passwd"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/border_gray"
