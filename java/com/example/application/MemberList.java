@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,15 +62,19 @@ public class MemberList extends AppCompatActivity {
                     " SELECT * FROM MEMBERS ", null);
             Main.Member member = null;
             if(cursor != null){
-                member = new Main.Member();
-                member.seq = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Main.SEQ)));
-                member.name = cursor.getString(cursor.getColumnIndex(Main.NAME));
-                member.passwd = cursor.getString(cursor.getColumnIndex(Main.PASSWD));
-                member.email = cursor.getString(cursor.getColumnIndex(Main.EMAIL));
-                member.phone = cursor.getString(cursor.getColumnIndex(Main.PHONE));
-                member.addr = cursor.getString(cursor.getColumnIndex(Main.ADDR));
-                member.photo = cursor.getString(cursor.getColumnIndex(Main.PHOTO));
-                list.add(member);
+                while(cursor.moveToNext()){
+                    member = new Main.Member();
+                    member.seq = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Main.SEQ)));
+                    member.name = cursor.getString(cursor.getColumnIndex(Main.NAME));
+                    member.passwd = cursor.getString(cursor.getColumnIndex(Main.PASSWD));
+                    member.email = cursor.getString(cursor.getColumnIndex(Main.EMAIL));
+                    member.phone = cursor.getString(cursor.getColumnIndex(Main.PHONE));
+                    member.addr = cursor.getString(cursor.getColumnIndex(Main.ADDR));
+                    member.photo = cursor.getString(cursor.getColumnIndex(Main.PHOTO));
+                    Log.d("Member : ", member.name);
+                    list.add(member);
+                }
+                Toast.makeText(_this, "등록된 친구의 수"+list.size(), Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(_this, "등록된 친구가 없음", Toast.LENGTH_LONG).show();
             }
