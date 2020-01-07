@@ -3,6 +3,7 @@ package com.example.application;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,7 +30,7 @@ public class MemberList extends AppCompatActivity {
         setContentView(R.layout.member_list);
         final Context _this = MemberList.this;
         final ItemList query = new ItemList(_this);
-        ListView memberList = findViewById(R.id.memberList);
+        final ListView memberList = findViewById(R.id.memberList);
         memberList.setAdapter(
                 new MemberAdapter(_this, new Supplier<ArrayList<Main.Member>>() {
             @Override
@@ -36,6 +38,20 @@ public class MemberList extends AppCompatActivity {
                 return query.get();
             }
         }.get()));
+        memberList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> p, View v, int i, long l) {
+                Intent intent = new Intent(_this, MemberDetail.class);
+                intent.putExtra("seq", memberList.getItemIdAtPosition(i)+"");
+                startActivity(intent);
+            }
+        });
+        memberList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> p, View v, int i, long l) {
+                return false;
+            }
+        });
 
     }
     private class MemberListQuery extends Main.QueryFactory{
@@ -74,7 +90,6 @@ public class MemberList extends AppCompatActivity {
                     Log.d("Member : ", member.name);
                     list.add(member);
                 }
-                Toast.makeText(_this, "등록된 친구의 수"+list.size(), Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(_this, "등록된 친구가 없음", Toast.LENGTH_LONG).show();
             }

@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.function.Consumer;
 
@@ -37,10 +36,8 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void accept(Main.Member member) {
                                 if(query.test()){
-                                    Toast.makeText(_this, "로그인성공", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(_this, MemberList.class));
                                 }else{
-                                    Toast.makeText(_this, "로그인실패", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(_this, Login.class));
                                 }
                             }
