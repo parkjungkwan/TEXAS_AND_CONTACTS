@@ -82,6 +82,41 @@ public class MemberList extends AppCompatActivity {
         }
 
     }
+    private class PhotoQuery extends Main.QueryFactory{
+
+        SQLiteOpenHelper helper;
+
+        public PhotoQuery(Context _this) {
+            super(_this);
+            helper = new Main.SQLiteHelper(_this);
+        }
+
+        @Override
+        public SQLiteDatabase getDatabase() {
+            return helper.getReadableDatabase();
+        }
+    }
+    private class ItemPhoto extends PhotoQuery{
+        String seq;
+        public ItemPhoto(Context _this) {
+            super(_this);
+        }
+        public String get(){
+            String result = "";
+            Cursor cursor = getDatabase()
+                    .rawQuery(String.format(" SELECT %s FROM %s " +
+                            " WHERE %s LIKE '%s'", Main.PHOTO, Main.MEMBERS,
+                            Main.SEQ, seq), null);
+            if(cursor != null){
+                if(cursor.moveToNext()){
+                    result = cursor.getString(cursor.getColumnIndex(Main.PHOTO));
+                }
+            }
+            Log.d("프로필명 : ", result);
+            return result;
+        }
+    }
+
     private class MemberAdapter extends BaseAdapter{
 
         ArrayList<Main.Member> list;
@@ -123,7 +158,24 @@ public class MemberList extends AppCompatActivity {
             }else{
                 holder = (ViewHolder)v.getTag();
             }
-
+            final ItemPhoto query = new ItemPhoto(_this);
+            query.seq = list.get(i).seq+"";
+            holder.photo
+                    .setImageDrawable(
+                            getResources()
+                            .getDrawable(
+                                    getResources()
+                                    .getIdentifier(
+                                            _this.getPackageName()+":drawable/"
+                                           +new Supplier<String>() {
+                                                @Override
+                                                public String get() {
+                                                    return query.get();
+                                                }
+                                            }.get(), null, null
+                                    )
+                            )
+                    );
             holder.name.setText(list.get(i).name);
             holder.phone.setText(list.get(i).phone);
             return v;
