@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ public class MemberDetail extends AppCompatActivity {
         Intent intent = this.getIntent();
         final ItemDetail query = new ItemDetail(_this);
         query.seq = Integer.parseInt(intent.getExtras().getString("seq"))+1;
-        Main.Member member = query.get();
+        final Main.Member member = query.get();
         ImageView profile = findViewById(R.id.profile);
         profile.setImageDrawable(
                 getResources()
@@ -46,6 +47,19 @@ public class MemberDetail extends AppCompatActivity {
         email.setText(member.email);
         phone.setText(member.phone);
         addr.setText(member.addr);
+
+        findViewById(R.id.updateBtn)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(_this, MemberUpdate.class);
+                        intent.putExtra("spec", String.format("%s,%s,%s,%s,%s,%s",
+                                member.seq,member.name,
+                                member.email,member.phone,
+                                member.addr,member.photo));
+                        startActivity(intent);
+                    }
+                });
 
 
     }
