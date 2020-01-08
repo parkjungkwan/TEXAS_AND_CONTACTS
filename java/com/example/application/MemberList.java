@@ -46,15 +46,15 @@ public class MemberList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> p, View v, int i, long l) {
                 Intent intent = new Intent(_this, MemberDetail.class);
-                int seq = (int)memberList.getItemIdAtPosition(i) + 1;
-                intent.putExtra("seq", seq+"");
+                Main.Member member = (Main.Member)memberList.getItemAtPosition(i);
+                intent.putExtra("seq", member.seq+"");
                 startActivity(intent);
             }
         });
         memberList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> p, View v, int i, long l) {
-                final String deleteKey = (memberList.getItemIdAtPosition(i) + 1) +"";
+                final Main.Member member = (Main.Member)memberList.getItemAtPosition(i);
                 new AlertDialog.Builder(_this)
                         .setTitle("DELETE")
                         .setMessage("정말 삭제할까요?")
@@ -64,7 +64,7 @@ public class MemberList extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         ItemDelete query = new ItemDelete(_this);
-                                        query.seq = deleteKey;
+                                        query.seq = member.seq+"";
                                         query.run();
                                         startActivity(new Intent(_this, MemberList.class));
 
