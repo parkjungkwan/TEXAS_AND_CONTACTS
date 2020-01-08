@@ -1,8 +1,10 @@
 package com.example.application;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -51,7 +54,37 @@ public class MemberList extends AppCompatActivity {
         memberList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> p, View v, int i, long l) {
-                return false;
+                final String deleteKey = (memberList.getItemIdAtPosition(i) + 1) +"";
+                new AlertDialog.Builder(_this)
+                        .setTitle("DELETE")
+                        .setMessage("정말 삭제할까요?")
+                        .setPositiveButton(
+                                android.R.string.yes,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ItemDelete query = new ItemDelete(_this);
+                                        query.seq = deleteKey;
+                                        query.run();
+                                        startActivity(new Intent(_this, MemberList.class));
+
+                                    }
+                                }
+                        )
+                        .setNegativeButton(
+                                android.R.string.no,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(_this, "삭제취소", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                        )
+                        .show();
+
+
+
+                return true;
             }
         });
 
@@ -133,6 +166,34 @@ public class MemberList extends AppCompatActivity {
             return result;
         }
     }
+    private class MemberDeleteQuery extends Main.QueryFactory{
+        SQLiteOpenHelper helper;
+        public MemberDeleteQuery(Context _this) {
+            super(_this);
+            helper = new Main.SQLiteHelper(_this);
+        }
+
+        @Override
+        public SQLiteDatabase getDatabase() {
+            return helper.getWritableDatabase();
+        }
+    }
+    private class ItemDelete extends MemberDeleteQuery{
+        String seq;
+        public ItemDelete(Context _this) {
+            super(_this);
+        }
+
+        public void run(){
+            String sql = String.format(
+                    " DELETE FROM %s\n" +
+                            "     WHERE %s LIKE '%s'",
+                    Main.MEMBERS, Main.SEQ, seq);
+            getDatabase().execSQL(sql);
+
+        }
+    }
+
 
     private class MemberAdapter extends BaseAdapter{
 

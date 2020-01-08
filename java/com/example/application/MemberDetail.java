@@ -60,6 +60,13 @@ public class MemberDetail extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+        findViewById(R.id.listBtn)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(_this, MemberList.class));
+                    }
+                });
 
 
     }
