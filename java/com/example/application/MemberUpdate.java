@@ -3,10 +3,12 @@ package com.example.application;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +20,7 @@ public class MemberUpdate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.member_update);
         final Context _this = MemberUpdate.this;
-        String[] arr = this.getIntent()
+        final String[] arr = this.getIntent()
                 .getStringExtra("spec")
                 .split(",");
         /*
@@ -38,14 +40,31 @@ public class MemberUpdate extends AppCompatActivity {
                                         )
                         )
         );
-        TextView name = findViewById(R.id.name);
-        TextView email = findViewById(R.id.changeEmail);
-        TextView phone = findViewById(R.id.changePhone);
-        TextView addr = findViewById(R.id.changeAddress);
-        name.setText(arr[1]);
-        email.setText(arr[2]);
-        phone.setText(arr[3]);
-        addr.setText(arr[4]);
+        final TextView nameTV = findViewById(R.id.name);
+        final TextView emailTV = findViewById(R.id.changeEmail);
+        final TextView phoneTV = findViewById(R.id.changePhone);
+        final TextView addrTV = findViewById(R.id.changeAddress);
+        nameTV.setText(arr[1]);
+        emailTV.setText(arr[2]);
+        phoneTV.setText(arr[3]);
+        addrTV.setText(arr[4]);
+        findViewById(R.id.confirmBtn)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ItemUpdate query = new ItemUpdate(_this);
+                        query.name = nameTV.getText().toString();
+                        query.email = emailTV.getText().toString();
+                        query.phone = phoneTV.getText().toString();
+                        query.addr = addrTV.getText().toString();
+                        query.seq = arr[0];
+                        query.run();
+                        Intent intent = new Intent(_this, MemberDetail.class);
+                        intent.putExtra("seq", arr[0]);
+                        startActivity(intent);
+
+                    }
+                });
     }
     private class MemberUpdateQuery extends Main.QueryFactory{
         SQLiteOpenHelper helper;

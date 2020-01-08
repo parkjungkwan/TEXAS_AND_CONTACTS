@@ -25,7 +25,7 @@ public class MemberDetail extends AppCompatActivity {
         final Context _this = MemberDetail.this;
         Intent intent = this.getIntent();
         final ItemDetail query = new ItemDetail(_this);
-        query.seq = Integer.parseInt(intent.getExtras().getString("seq"))+1;
+        query.seq = Integer.parseInt(intent.getExtras().getString("seq"));
         final Main.Member member = query.get();
         ImageView profile = findViewById(R.id.profile);
         profile.setImageDrawable(

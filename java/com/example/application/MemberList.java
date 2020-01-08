@@ -43,7 +43,8 @@ public class MemberList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> p, View v, int i, long l) {
                 Intent intent = new Intent(_this, MemberDetail.class);
-                intent.putExtra("seq", memberList.getItemIdAtPosition(i)+"");
+                int seq = (int)memberList.getItemIdAtPosition(i) + 1;
+                intent.putExtra("seq", seq+"");
                 startActivity(intent);
             }
         });
