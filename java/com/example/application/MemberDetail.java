@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.function.Supplier;
@@ -23,14 +25,28 @@ public class MemberDetail extends AppCompatActivity {
         Intent intent = this.getIntent();
         final ItemDetail query = new ItemDetail(_this);
         query.seq = Integer.parseInt(intent.getExtras().getString("seq"))+1;
-        Main.Member member = new Supplier<Main.Member>() {
-            @Override
-            public Main.Member get() {
-                return query.get();
-            }
-        }.get();
+        Main.Member member = query.get();
+        ImageView profile = findViewById(R.id.profile);
+        profile.setImageDrawable(
+                getResources()
+                        .getDrawable(
+                                getResources()
+                                        .getIdentifier(
+                                                _this.getPackageName()+":drawable/"+member.photo,
+                                                null,
+                                                null
+                                        )
+                        )
+        );
+        TextView name = findViewById(R.id.name);
+        TextView email = findViewById(R.id.email);
+        TextView phone = findViewById(R.id.phone);
+        TextView addr = findViewById(R.id.addr);
+        name.setText(member.name);
+        email.setText(member.email);
+        phone.setText(member.phone);
+        addr.setText(member.addr);
 
-        Toast.makeText(_this, "회원이름 "+member.name, Toast.LENGTH_LONG).show();
 
     }
     private class MemberDetailQuery extends Main.QueryFactory{

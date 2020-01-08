@@ -35,6 +35,7 @@ public class MemberList extends AppCompatActivity {
                 new MemberAdapter(_this, new Supplier<ArrayList<Main.Member>>() {
             @Override
             public ArrayList<Main.Member> get() {
+                //
                 return query.get();
             }
         }.get()));
